@@ -1,3 +1,2 @@
-a = 'B'
-print(type(a))
-print(a - 1)
+a = 5 // 2 
+print(a)
