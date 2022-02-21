@@ -1,5 +1,4 @@
-from node import node as Node
-
+from node import Node
 
 class LinkedList:
     def __init__(self):
@@ -16,6 +15,10 @@ class LinkedList:
 
     def insert_at_head(self, dt):
         temp_node = Node(dt)
+        if(self.is_empty()):
+            self.head_node = temp_node
+            return self.head_node
+
         temp_node.next_element = self.head_node
         self.head_node = temp_node
         return self.head_node
@@ -40,6 +43,17 @@ class LinkedList:
         temp.next_element = new_node
         return
 
+    def length(self):
+        # start from the first element
+        curr = self.get_head()
+        length = 0
+
+        # Traverse the list and count the number of nodes
+        while curr is not None:
+            length += 1
+            curr = curr.next_element
+        return length
+
     def print_list(self):
         if(self.is_empty()):
             print("List is Empty")
@@ -61,6 +75,31 @@ class LinkedList:
             first_element.next_element = None
         return
 
+    def delete(self, value):
+        deleted = False
+        if self.is_empty():  # Check if list is empty -> Return False
+            print("List is Empty")
+            return deleted
+        current_node = self.get_head()  # Get current node
+        previous_node = None  # Get previous node
+        if current_node.data is value:
+            self.delete_at_head()  # Use the previous function
+            deleted = True
+            return deleted
+
+        # Traversing/Searching for Node to Delete
+        while current_node is not None:
+            # Node to delete is found
+            if value is current_node.data:
+                # previous node now points to next node
+                previous_node.next_element = current_node.next_element
+                current_node.next_element = None
+                deleted = True
+                break
+            previous_node = current_node
+            current_node = current_node.next_element
+
+        return deleted
 
     def search(self, dt):
         if self.is_empty():
@@ -69,20 +108,34 @@ class LinkedList:
         temp = self.head_node
         while(temp is not None):
             if(temp.data is dt):
-                return True
+                return temp
             temp = temp.next_element
 
         print(dt, " is not in List!")
-        return False
+        return None
 
-    # def delete(lst, value):
-        
-    #     if (search())    
-    
+    def remove_duplicates(self):
+        if self.is_empty():
+            return
 
-lst = LinkedList()
-lst.insert_at_head(4)
-lst.insert_at_head(10)
-lst.insert_at_head(40)
-lst.insert_at_head(5)
-lst.search(40)
+        # If list only has one node, leave it unchanged
+        if self.get_head().next_element is None:
+            return
+
+        outer_node = self.get_head()
+        while outer_node:
+            inner_node = outer_node  # Iterator for the inner loop
+            while inner_node:
+                if inner_node.next_element:
+                    if outer_node.data == inner_node.next_element.data:
+                        # Duplicate found, so now removing it
+                        new_next_element = inner_node.next_element.next_element
+                        inner_node.next_element = new_next_element
+                    else:
+                        # Otherwise simply iterate ahead
+                        inner_node = inner_node.next_element
+                else:
+                    # Otherwise simply iterate ahead
+                    inner_node = inner_node.next_element
+            outer_node = outer_node.next_element
+        return
